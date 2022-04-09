@@ -1,6 +1,8 @@
 from django.db import models
+from django.db.models.signals import post_delete, pre_save
 
 from users.models import Manager, Guest
+from .signals import post_delete_dispatcher_for_delete_old_files, pre_save_dispatcher_for_delete_old_files
 
 
 class Event(models.Model):
@@ -52,3 +54,7 @@ class Feedback(models.Model):
     class Meta:
         verbose_name = 'Отклик'
         verbose_name_plural = 'Отклики'
+
+
+post_delete.connect(post_delete_dispatcher_for_delete_old_files, sender=Feedback)
+pre_save.connect(pre_save_dispatcher_for_delete_old_files, sender=Feedback)
