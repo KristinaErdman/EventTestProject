@@ -1,8 +1,9 @@
 from rest_framework import viewsets
 
-from .models import FirstTypeEvent, SecondTypeEvent
+from .models import FirstTypeEvent, SecondTypeEvent, Application, Feedback
 from .serializers import FirstTypeEventSerializer, FirstTypeEventReadSerializer, SecondTypeEventSerializer, \
-    SecondTypeEventReadSerializer
+    SecondTypeEventReadSerializer, ApplicationSerializer, ApplicationReadSerializer, FeedbackSerializer, \
+    FeedbackReadSerializer
 
 
 class FirstTypeEventViewSet(viewsets.ModelViewSet):
@@ -23,3 +24,23 @@ class SecondTypeEventViewSet(viewsets.ModelViewSet):
         if request.method.lower() == 'get':
             self.serializer_class = SecondTypeEventReadSerializer
         return super(SecondTypeEventViewSet, self).dispatch(request, *args, **kwargs)
+
+
+class ApplicationViewSet(viewsets.ModelViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method.lower() == 'get':
+            self.serializer_class = ApplicationReadSerializer
+        return super(ApplicationViewSet, self).dispatch(request, *args, **kwargs)
+
+
+class FeedbackViewSet(viewsets.ModelViewSet):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method.lower() == 'get':
+            self.serializer_class = FeedbackReadSerializer
+        return super(FeedbackViewSet, self).dispatch(request, *args, **kwargs)
