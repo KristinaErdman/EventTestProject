@@ -6,7 +6,7 @@ from .signals import post_delete_dispatcher_for_delete_old_files, pre_save_dispa
 
 
 class Event(models.Model):
-    creation_date = models.DateField(auto_now_add=True, verbose_name='Дата размещения')
+    creation_date = models.DateField(auto_now_add=True, editable=False, verbose_name='Дата размещения')
     date = models.DateField(verbose_name='Дата проведения')
     title = models.CharField(max_length=255, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
