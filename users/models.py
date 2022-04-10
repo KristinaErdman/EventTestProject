@@ -13,6 +13,10 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def create_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_staff', True)
@@ -40,6 +44,15 @@ class User(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Все пользователи'
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            previous = self.__class__.objects.get(pk=self.pk)
+            if getattr(previous, 'password') != getattr(self, 'password'):
+                self.set_password(self.password)
+        else:
+            self.set_password(self.password)
+        super(User, self).save(*args, **kwargs)
+
 
 class Manager(User):
     class Meta:
@@ -52,8 +65,6 @@ class Manager(User):
 
 
 class Guest(User):
-    is_blocked = models.BooleanField(default=False)
-
     class Meta:
         verbose_name = 'Гость'
         verbose_name_plural = 'Гости'
