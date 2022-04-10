@@ -16,7 +16,8 @@ class Event(models.Model):
 
 
 class FirstTypeEvent(Event):
-    manager = models.ForeignKey(Manager, related_name='first_type_events', on_delete=models.PROTECT)
+    manager = models.ForeignKey(Manager, related_name='first_type_events', on_delete=models.PROTECT,
+                                verbose_name='Менеджер')
 
     class Meta:
         verbose_name = 'Событие первого типа'
@@ -24,7 +25,8 @@ class FirstTypeEvent(Event):
 
 
 class SecondTypeEvent(Event):
-    manager = models.ForeignKey(Manager, related_name='second_type_events', on_delete=models.PROTECT)
+    manager = models.ForeignKey(Manager, related_name='second_type_events', on_delete=models.PROTECT,
+                                verbose_name='Менеджер')
 
     class Meta:
         verbose_name = 'Событие второго типа'
@@ -41,6 +43,7 @@ class Application(models.Model):
     class Meta:
         verbose_name = 'Заявка на участие'
         verbose_name_plural = 'Заявки на участие'
+        unique_together = (('event', 'guest'),)
 
 
 class Feedback(models.Model):
@@ -54,6 +57,7 @@ class Feedback(models.Model):
     class Meta:
         verbose_name = 'Отклик'
         verbose_name_plural = 'Отклики'
+        unique_together = (('event', 'guest'),)
 
 
 post_delete.connect(post_delete_dispatcher_for_delete_old_files, sender=Feedback)
