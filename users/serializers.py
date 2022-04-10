@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Manager
+from .models import Manager, Guest
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -17,4 +17,10 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 class ManagerSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Manager
+        exclude = ['groups', 'user_permissions', 'is_staff', 'last_login', 'is_superuser', ]
+
+
+class GuestSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Guest
         exclude = ['groups', 'user_permissions', 'is_staff', 'last_login', 'is_superuser', ]

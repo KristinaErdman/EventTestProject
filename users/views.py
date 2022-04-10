@@ -1,16 +1,13 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .models import Manager
-from .serializers import ManagerSerializer
+from .models import Manager, Guest
+from .serializers import ManagerSerializer, GuestSerializer
 
 
-class ManagerViewSet(viewsets.ModelViewSet):
-    queryset = Manager.objects.all()
+class UserViewSet(viewsets.ModelViewSet):
     fields = ['id', 'last_login', 'is_superuser', 'is_active', 'date_joined', 'last_name', 'first_name',
               'middle_name', 'phone_number', 'email', 'password']
-
-    serializer_class = ManagerSerializer
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -39,3 +36,16 @@ class ManagerViewSet(viewsets.ModelViewSet):
             fields=filter(lambda field: field != 'password', self.fields)
         )
         return Response(serializer.data)
+
+
+class ManagerViewSet(UserViewSet):
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer
+
+
+class GuestViewSet(UserViewSet):
+    queryset = Guest.objects.all()
+    fields = ['id', 'last_login', 'is_superuser', 'is_active', 'date_joined', 'last_name', 'first_name',
+              'middle_name', 'phone_number', 'email', 'password']
+
+    serializer_class = GuestSerializer
