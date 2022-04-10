@@ -16,9 +16,13 @@ class FeedbackAdminInline(admin.TabularInline):
 
 @register(FirstTypeEvent)
 class FirstTypeEventAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'manager')
+    list_filter = ('manager__email',)
     inlines = (ApplicationAdminInline,)
 
 
 @register(SecondTypeEvent)
 class SecondTypeEventAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'manager')
+    list_filter = ('manager__email',)
     inlines = (FeedbackAdminInline,)
