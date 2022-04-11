@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 
+from .filtersets import ApplicationFilterSet, FeedbackFilterSet
 from .models import FirstTypeEvent, SecondTypeEvent, Application, Feedback
 from .permissions import ForManagerOrReadOnlyPermission, ForGuestOrReadOnlyPermission
 from .serializers import FirstTypeEventSerializer, FirstTypeEventReadSerializer, SecondTypeEventSerializer, \
@@ -33,6 +34,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     permission_classes = (ForGuestOrReadOnlyPermission,)
+    filterset_class = ApplicationFilterSet
 
     def get_queryset(self):
         if not self.request.user.is_anonymous:
@@ -48,6 +50,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
     permission_classes = (ForGuestOrReadOnlyPermission,)
+    filterset_class = FeedbackFilterSet
 
     def get_queryset(self):
         if not self.request.user.is_anonymous:
