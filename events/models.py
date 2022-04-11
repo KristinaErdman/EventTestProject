@@ -49,6 +49,9 @@ class Application(models.Model):
         verbose_name_plural = 'Заявки на участие'
         unique_together = (('event', 'guest'),)
 
+    def __str__(self):
+        return f'Заявка № {self.pk}'
+
 
 class Feedback(models.Model):
     guest = models.ForeignKey(User, limit_choices_to={'type': User.Type.GUEST}, related_name='feedbacks',
@@ -63,6 +66,9 @@ class Feedback(models.Model):
         verbose_name = 'Отклик'
         verbose_name_plural = 'Отклики'
         unique_together = (('event', 'guest'),)
+
+    def __str__(self):
+        return f'Отклик № {self.pk}'
 
 
 post_delete.connect(post_delete_dispatcher_for_delete_old_files, sender=Feedback)
