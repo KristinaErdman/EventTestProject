@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 
 from .models import FirstTypeEvent, SecondTypeEvent, Application, Feedback
+from .permissions import ForManagerOrReadOnlyPermission, ForGuestOrReadOnlyPermission
 from .serializers import FirstTypeEventSerializer, FirstTypeEventReadSerializer, SecondTypeEventSerializer, \
     SecondTypeEventReadSerializer, ApplicationSerializer, ApplicationReadSerializer, FeedbackSerializer, \
     FeedbackReadSerializer
@@ -9,6 +10,7 @@ from .serializers import FirstTypeEventSerializer, FirstTypeEventReadSerializer,
 class FirstTypeEventViewSet(viewsets.ModelViewSet):
     queryset = FirstTypeEvent.objects.all()
     serializer_class = FirstTypeEventSerializer
+    permission_classes = (ForManagerOrReadOnlyPermission,)
 
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() == 'get':
@@ -19,6 +21,7 @@ class FirstTypeEventViewSet(viewsets.ModelViewSet):
 class SecondTypeEventViewSet(viewsets.ModelViewSet):
     queryset = SecondTypeEvent.objects.all()
     serializer_class = SecondTypeEventSerializer
+    permission_classes = (ForManagerOrReadOnlyPermission,)
 
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() == 'get':
@@ -29,6 +32,10 @@ class SecondTypeEventViewSet(viewsets.ModelViewSet):
 class ApplicationViewSet(viewsets.ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+    permission_classes = (ForGuestOrReadOnlyPermission,)
+
+    def get_queryset(self):
+        return Application.objects.filter(guest=self.request.user)
 
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() == 'get':
@@ -39,6 +46,10 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
+    permission_classes = (ForGuestOrReadOnlyPermission,)
+
+    def get_queryset(self):
+        return Feedback.objects.filter(guest=self.request.user)
 
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() == 'get':
