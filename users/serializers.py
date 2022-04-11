@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Manager, Guest
+from .models import User
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -14,13 +14,21 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
                 self.fields.pop(field_name)
 
 
+class UserSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = User
+        exclude = ['groups', 'user_permissions', 'is_staff', 'last_login', 'is_superuser', ]
+
+
 class ManagerSerializer(DynamicFieldsModelSerializer):
     class Meta:
-        model = Manager
-        exclude = ['groups', 'user_permissions', 'is_staff', 'last_login', 'is_superuser', ]
+        model = User
+        exclude = ['groups', 'user_permissions', 'is_staff', 'last_login', 'is_superuser', 'type']
 
+    def create(self, validated_data):
+        validated_data['type'] = User.Type.MANAGER
+        return super(ManagerSerializer, self).create(validated_data)
 
-class GuestSerializer(DynamicFieldsModelSerializer):
-    class Meta:
-        model = Guest
-        exclude = ['groups', 'user_permissions', 'is_staff', 'last_login', 'is_superuser', ]
+    def update(self, instance, validated_data):
+        validated_data['type'] = User.Type.MANAGER
+        return super(ManagerSerializer, self).update(instance, validated_data)

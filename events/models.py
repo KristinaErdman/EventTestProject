@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_delete, pre_save
 
-from users.models import Manager, Guest
+from users.models import User
 from .signals import post_delete_dispatcher_for_delete_old_files, pre_save_dispatcher_for_delete_old_files, notify
 
 
@@ -16,7 +16,8 @@ class Event(models.Model):
 
 
 class FirstTypeEvent(Event):
-    manager = models.ForeignKey(Manager, related_name='first_type_events', on_delete=models.PROTECT,
+    manager = models.ForeignKey(User, limit_choices_to={'type': User.Type.MANAGER}, related_name='first_type_events',
+                                on_delete=models.PROTECT,
                                 verbose_name='Менеджер')
 
     class Meta:
@@ -25,7 +26,8 @@ class FirstTypeEvent(Event):
 
 
 class SecondTypeEvent(Event):
-    manager = models.ForeignKey(Manager, related_name='second_type_events', on_delete=models.PROTECT,
+    manager = models.ForeignKey(User, limit_choices_to={'type': User.Type.MANAGER}, related_name='second_type_events',
+                                on_delete=models.PROTECT,
                                 verbose_name='Менеджер')
 
     class Meta:
@@ -34,7 +36,9 @@ class SecondTypeEvent(Event):
 
 
 class Application(models.Model):
-    guest = models.ForeignKey(Guest, related_name='applications', on_delete=models.CASCADE, verbose_name='Гость')
+    guest = models.ForeignKey(User, limit_choices_to={'type': User.Type.GUEST}, related_name='applications',
+                              on_delete=models.CASCADE,
+                              verbose_name='Гость')
     date = models.DateField(auto_now_add=True, verbose_name='Дата')
     event = models.ForeignKey(FirstTypeEvent, related_name='applications', on_delete=models.CASCADE,
                               verbose_name='Событие')
@@ -47,7 +51,8 @@ class Application(models.Model):
 
 
 class Feedback(models.Model):
-    guest = models.ForeignKey(Guest, related_name='feedbacks', on_delete=models.CASCADE, verbose_name='Гость')
+    guest = models.ForeignKey(User, limit_choices_to={'type': User.Type.GUEST}, related_name='feedbacks',
+                              on_delete=models.CASCADE, verbose_name='Гость')
     date = models.DateField(auto_now_add=True, verbose_name='Дата')
     event = models.ForeignKey(SecondTypeEvent, related_name='feedbacks', on_delete=models.CASCADE,
                               verbose_name='Событие')

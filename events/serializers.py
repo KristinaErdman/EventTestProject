@@ -1,18 +1,12 @@
 from rest_framework import serializers
 
-from users.serializers import ManagerSerializer, GuestSerializer
+from users.serializers import UserSerializer
 from .models import FirstTypeEvent, SecondTypeEvent, Application, Feedback
 
 
 class FirstTypeEventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FirstTypeEvent
-        fields = '__all__'
-
-
-class FirstTypeEventReadSerializer(serializers.ModelSerializer):
-    manager = ManagerSerializer(read_only=True, fields=('id', 'is_active', 'last_name', 'first_name',
-                                                        'middle_name', 'phone_number', 'email',))
+    manager = UserSerializer(read_only=True, fields=('id', 'is_active', 'last_name', 'first_name',
+                                                     'middle_name', 'phone_number', 'email',))
 
     class Meta:
         model = FirstTypeEvent
@@ -26,8 +20,8 @@ class SecondTypeEventSerializer(serializers.ModelSerializer):
 
 
 class SecondTypeEventReadSerializer(serializers.ModelSerializer):
-    manager = ManagerSerializer(read_only=True, fields=('id', 'is_active', 'last_name', 'first_name',
-                                                        'middle_name', 'phone_number', 'email',))
+    manager = UserSerializer(read_only=True, fields=('id', 'is_active', 'last_name', 'first_name',
+                                                     'middle_name', 'phone_number', 'email',))
 
     class Meta:
         model = SecondTypeEvent
@@ -41,9 +35,9 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
 
 class ApplicationReadSerializer(serializers.ModelSerializer):
-    event = FirstTypeEventReadSerializer(read_only=True)
-    guest = GuestSerializer(read_only=True, fields=('id', 'is_active', 'last_name', 'first_name',
-                                                    'middle_name', 'phone_number', 'email',))
+    event = FirstTypeEventSerializer(read_only=True)
+    guest = UserSerializer(read_only=True, fields=('id', 'is_active', 'last_name', 'first_name',
+                                                   'middle_name', 'phone_number', 'email',))
 
     class Meta:
         model = Application
@@ -58,8 +52,8 @@ class FeedbackSerializer(serializers.ModelSerializer):
 
 class FeedbackReadSerializer(serializers.ModelSerializer):
     event = SecondTypeEventReadSerializer(read_only=True)
-    guest = GuestSerializer(read_only=True, fields=('id', 'is_active', 'last_name', 'first_name',
-                                                    'middle_name', 'phone_number', 'email',))
+    guest = UserSerializer(read_only=True, fields=('id', 'is_active', 'last_name', 'first_name',
+                                                   'middle_name', 'phone_number', 'email',))
 
     class Meta:
         model = Feedback

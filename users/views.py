@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .models import Manager, Guest
-from .serializers import ManagerSerializer, GuestSerializer
+from .models import User
+from .serializers import UserSerializer, ManagerSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -39,13 +39,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class ManagerViewSet(UserViewSet):
-    queryset = Manager.objects.all()
+    queryset = User.objects.filter(type=User.Type.MANAGER)
     serializer_class = ManagerSerializer
 
 
 class GuestViewSet(UserViewSet):
-    queryset = Guest.objects.all()
+    queryset = User.objects.filter(type=User.Type.GUEST)
     fields = ['id', 'last_login', 'is_superuser', 'is_active', 'date_joined', 'last_name', 'first_name',
               'middle_name', 'phone_number', 'email', 'password']
 
-    serializer_class = GuestSerializer
+    serializer_class = UserSerializer
