@@ -35,7 +35,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     permission_classes = (ForGuestOrReadOnlyPermission,)
 
     def get_queryset(self):
-        return Application.objects.filter(guest=self.request.user)
+        if not self.request.user.is_anonymous:
+            return Application.objects.filter(guest=self.request.user)
 
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() == 'get':
@@ -49,7 +50,8 @@ class FeedbackViewSet(viewsets.ModelViewSet):
     permission_classes = (ForGuestOrReadOnlyPermission,)
 
     def get_queryset(self):
-        return Feedback.objects.filter(guest=self.request.user)
+        if not self.request.user.is_anonymous:
+            return Feedback.objects.filter(guest=self.request.user)
 
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() == 'get':

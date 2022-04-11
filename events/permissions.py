@@ -8,13 +8,19 @@ class ForManagerOrReadOnlyPermission(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         else:
-            return request.user.type == User.Type.MANAGER
+            if not request.user.is_anonymous:
+                return request.user.type == User.Type.MANAGER
+            else:
+                return False
 
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
             return True
         else:
-            return obj.manager == request.user
+            if not request.user.is_anonymous:
+                return obj.manager == request.user
+            else:
+                return False
 
 
 class ForGuestOrReadOnlyPermission(BasePermission):
@@ -22,10 +28,16 @@ class ForGuestOrReadOnlyPermission(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         else:
-            return request.user.type == User.Type.GUEST
+            if not request.user.is_anonymous:
+                return request.user.type == User.Type.MANAGER
+            else:
+                return False
 
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
             return True
         else:
-            return obj.guest == request.user
+            if not request.user.is_anonymous:
+                return obj.manager == request.user
+            else:
+                return False
